@@ -218,10 +218,10 @@ switch ($a) {
         }
         $row = [
             'id' => 'f' . bin2hex(random_bytes(8)), 'project_id' => $pid, 'tag' => $tag, 'name' => $name,
-            'size' => (int)$f['size'], 'mime' => substr($mime, 0, 120), 'stored' => $stored,
+            'size' => (int)$f['size'], 'mime' => substr($mime, 0, 120), 'stored_name' => $stored,
             'uploaded_at' => rp_now(), 'user_id' => $uid,
         ];
-        $pdo->prepare('INSERT INTO rp_files (id, project_id, tag, name, size, mime, stored, uploaded_at, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+        $pdo->prepare('INSERT INTO rp_files (id, project_id, tag, name, size, mime, stored_name, uploaded_at, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
             ->execute(array_values($row));
         out(['ok' => true, 'file' => file_row($row)]);
 
@@ -231,7 +231,7 @@ switch ($a) {
         $st = $pdo->prepare('SELECT * FROM rp_files WHERE id = ? AND deleted = 0');
         $st->execute([$id]);
         $r = $st->fetch();
-        $path = $r ? __DIR__ . '/data/uploads/' . $r['stored'] : '';
+        $path = $r ? __DIR__ . '/data/uploads/' . $r['stored_name'] : '';
         if (!$r || !is_file($path)) out(['error' => 'Fichier introuvable.'], 404);
         $mime = $r['mime'];
         $inline = $mime === 'application/pdf' || str_starts_with($mime, 'video/') || str_starts_with($mime, 'audio/')
@@ -270,12 +270,12 @@ switch ($a) {
     case 'delete_file':
         $id = $in['id'] ?? '';
         if (!valid_id($id)) out(['error' => 'Fichier introuvable.'], 404);
-        $st = $pdo->prepare('SELECT stored FROM rp_files WHERE id = ? AND deleted = 0');
+        $st = $pdo->prepare('SELECT stored_name FROM rp_files WHERE id = ? AND deleted = 0');
         $st->execute([$id]);
         $r = $st->fetch();
         if ($r) {
             $pdo->prepare('UPDATE rp_files SET deleted = 1 WHERE id = ?')->execute([$id]);
-            @unlink(__DIR__ . '/data/uploads/' . $r['stored']);
+            @unlink(__DIR__ . '/data/uploads/' . $r['stored_name']);
         }
         out(['ok' => true]);
 

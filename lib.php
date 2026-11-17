@@ -69,7 +69,7 @@ function rp_schema(): array
             name VARCHAR(255) NOT NULL,
             size BIGINT NOT NULL,
             mime VARCHAR(120) NOT NULL,
-            stored VARCHAR(80) NOT NULL,
+            stored_name VARCHAR(80) NOT NULL,
             uploaded_at DATETIME NOT NULL,
             user_id INT NULL,
             deleted TINYINT NOT NULL DEFAULT 0,
