@@ -51,7 +51,17 @@ if (!$done && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $ok = true;
             $done = true;
         } catch (PDOException $e) {
-            $errors[] = 'Connexion à la base impossible. Vérifiez le serveur, le nom de la base, l’utilisateur et le mot de passe.';
+            $m = $e->getMessage();
+            $code = (int)($e->errorInfo[1] ?? 0) ?: (preg_match('/\[(\d{4})\]/', $m, $mm) ? (int)$mm[1] : 0);
+            if ($code === 1045 || stripos($m, 'Access denied') !== false) {
+                $errors[] = 'La base refuse la connexion : l’utilisateur ou le mot de passe de la base est incorrect. Le mot de passe est celui choisi à la création de la base (modifiable dans OVH, onglet Bases de données).';
+            } elseif ($code === 1049 || stripos($m, 'Unknown database') !== false) {
+                $errors[] = 'Le serveur répond, mais aucune base ne porte ce nom. Recopiez le nom exact affiché dans OVH, onglet Bases de données.';
+            } elseif (in_array($code, [2002, 2005, 2006], true) || stripos($m, 'getaddrinfo') !== false || stripos($m, 'Connection refused') !== false || stripos($m, 'timed out') !== false) {
+                $errors[] = 'Serveur de base introuvable. Vérifiez l’adresse du serveur (colonne « Server address » dans OVH, sans https:// ni slash). Si la base vient d’être créée, attendez quelques minutes.';
+            } else {
+                $errors[] = 'Connexion à la base impossible (code ' . ($code ?: 'inconnu') . '). Vérifiez le serveur, le nom de la base, l’utilisateur et le mot de passe.';
+            }
         } catch (Throwable $e) {
             $errors[] = $e->getMessage();
         }
