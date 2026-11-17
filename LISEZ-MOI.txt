@@ -1,0 +1,49 @@
+RondPoint 1.1 · 11.65Lab
+Mise en ligne sur l'hébergement OVH Perso (rondpoint.11-65lab.com)
+==================================================================
+
+1. PHP 8
+   Espace client OVH > Hébergements > 11-65lab.com > Informations générales.
+   « Global PHP version » > « … » > choisir la version 8 la plus récente.
+
+2. Base de données
+   Onglet « Bases de données » > « Créer une base de données » > MySQL.
+   Notez : le serveur (du type xxxxxx.mysql.db), le nom de la base,
+   l'utilisateur et le mot de passe. La base est prête en quelques minutes.
+
+3. Sous-domaine
+   Onglet « Multisite » (ou « Mes sites ») > « Ajouter un domaine ou sous-domaine ».
+   Domaine : 11-65lab.com, sous-domaine : rondpoint
+   Dossier racine : rondpoint
+   Cochez SSL. Laissez OVH configurer la zone DNS automatiquement.
+   Comptez de quelques minutes à quelques heures avant que l'adresse réponde
+   et que le cadenas HTTPS soit actif.
+
+4. Dépôt des fichiers (FTP)
+   Onglet « FTP - SSH » : serveur, identifiant, et « Changer le mot de passe »
+   si vous ne l'avez plus. Avec FileZilla (gratuit), connectez-vous et
+   déposez TOUT le contenu du dossier « rondpoint » de ce zip dans le dossier
+   « rondpoint » de l'hébergement, y compris les fichiers .htaccess
+   et le dossier « data ».
+
+5. Installation
+   Ouvrez https://rondpoint.11-65lab.com/install.php
+   Saisissez les identifiants de la base (étape 2) et créez votre compte
+   administrateur. Supprimez ensuite install.php par FTP.
+
+6. Équipe
+   Dans RondPoint > Paramètres > Comptes d'accès : créez un compte pour
+   chaque personne de l'équipe.
+
+Bon à savoir
+- Les données sont dans la base MySQL ; les fichiers déposés dans data/uploads.
+  Ce dossier n'est jamais accessible directement depuis le web.
+- Chaque modification est historisée dans la base (table rp_history).
+- La taille maximale d'un fichier dépend de l'hébergement : elle est affichée
+  dans l'onglet Aperçu des projets.
+- Si l'adresse affiche une erreur juste après l'étape 3, c'est que le certificat
+  SSL n'est pas encore actif : patientez, puis réessayez.
+- Mise à jour depuis la 1.0 : déposez par FTP tous les fichiers SAUF config.php et le
+  dossier data (vos réglages et fichiers déposés y sont). La base n'a pas à être modifiée.
+- Les vidéos de revue passent par l'hébergement : au-delà de la taille autorisée par OVH,
+  utilisez plutôt un lien (Frame.io, Vimeo, NAS) dans la version.

@@ -1,0 +1,7 @@
+# Jamais versionnés : réglages et données propres à l'hébergement
+config.php
+data/uploads/*
+data/sessions/*
+!data/uploads/.htaccess
+!data/sessions/.htaccess
+.DS_Store
